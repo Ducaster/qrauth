@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Qrscan from './page'
+import { QrProvider } from './importsheet'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <QrProvider>
+        <body className={inter.className}>{children}</body>
+      </QrProvider>
     </html>
   )
 }

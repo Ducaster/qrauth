@@ -1,95 +1,53 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import { useEffect, useRef } from "react";
+import QrScanner from "qr-scanner";
+import React from "react";
+import { useQrData } from './importsheet';
 
-export default function Home() {
+export default function Qrscan() {
+  const videoRef = useRef(null);
+  const { setQrData } = useQrData();
+  const QrOptions = {
+    preferredCamera: "environment",
+    maxScansPerSecond: 60,
+    highlightScanRegion: true,
+  };
+
+  const handleScan = (result: QrScanner.ScanResult) => {
+    const parsedData = result.data; 
+    console.log(parsedData + 'first');
+    if (parsedData.includes('name')) { 
+      console.log(parsedData+'woiefjewojfiweoifj');
+      setQrData(parsedData); 
+      alert(parsedData); 
+    } else {
+      alert('QR data does not have the required key: ' + parsedData); // 토스트 메시지로 오류 메시지를 출력합니다.
+    }
+  };
+
+  /*const handleScan = (result: QrScanner.ScanResult) => {
+    try {
+      const parsedData = JSON.parse(result.data);
+      console.log(parsedData);
+      setQrData(parsedData); // QR 데이터를 전역 상태에 설정합니다.
+      alert(parsedData); // QR 데이터를 팝업 메시지로 표시합니다.
+    } catch (error) {
+      console.error('QR data is not valid JSON:', result.data);
+    }
+  };*/
+
+  useEffect(() => {
+    const videoElem = videoRef.current;
+    if (videoElem) {
+      const qrScanner = new QrScanner(videoElem, (result) => handleScan(result), QrOptions);
+      qrScanner.start();
+
+      return () => qrScanner.destroy();
+    }
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    <video ref={videoRef} style={{
+    }} autoPlay playsInline />
+  );
 }
