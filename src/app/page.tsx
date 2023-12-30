@@ -1,5 +1,4 @@
 'use client';
-import React, { Suspense } from "react";
 import { useEffect, useRef } from "react";
 import QrScanner from "qr-scanner";
 import { useQrData } from './importsheet';
@@ -40,7 +39,12 @@ export default function Qrscan() {
   }, []);
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }}>
       <video ref={videoRef} style={{
       }} autoPlay playsInline />
       <ToastContainer />

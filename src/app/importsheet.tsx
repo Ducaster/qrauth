@@ -1,6 +1,8 @@
 'use client';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface QrContextType {
   qrData: string | null;
@@ -14,9 +16,24 @@ export const QrProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   useEffect(() => {
     if (qrData) {
-        axios.post('./api/save', {
-            qrData
-        })
+      toast('인증 중...', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      axios.post('./api/save', {
+        qrData
+      }).then((response) => {
+        if (response.status === 200) {
+          toast('인증 완료', {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          setTimeout(() =>{toast.dismiss()}, 500);
+        } else {
+          toast('인증 실패', {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          setTimeout(() =>{toast.dismiss()}, 3000);
+        }
+      });
     }
   }, [qrData]);
 
