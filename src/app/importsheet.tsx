@@ -14,7 +14,7 @@ export const QrProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   useEffect(() => {
     if (qrData) {
-        axios.post('http://localhost:3000/api/save', {
+        axios.post('./api/save', {
             qrData
         })
     }
