@@ -7,8 +7,8 @@ import { QrProvider } from './importsheet'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Seouljames QR Auth',
-  description: 'made by SeouljamesUniv.',
+  title: 'WaveOn QR Auth',
+  description: 'made by SJUniv.',
 }
 
 export default function RootLayout({
