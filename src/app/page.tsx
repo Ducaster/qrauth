@@ -9,7 +9,7 @@ export default function Qrscan() {
   const videoRef = useRef(null);
   const { setQrData } = useQrData();
   const QrOptions = {
-    preferredCamera: "environment",
+    preferredCamera: "environnment",
     maxScansPerSecond: 15,
     highlightScanRegion: true,
   };

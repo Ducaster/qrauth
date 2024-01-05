@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'WaveOn QR Auth',
-  description: 'made by SJUniv.',
+  description: 'WaveOn QR Auth',
 }
 
 export default function RootLayout({
