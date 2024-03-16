@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
     await sheet.addRow({
       이름: sheetdata.name,
       지역: sheetdata.region,
-      시간: new Date().toLocaleString(),
+      시간: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
     });
 
     return NextResponse.json({ success: true }, { status: 200 });
