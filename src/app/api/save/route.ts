@@ -138,27 +138,33 @@ export async function POST(req: NextRequest) {
     if (!sheet) {
       console.log("Create a new sheet");
       sheet = await doc.addSheet({
-        headerValues: ["이름", "지역", "시간"],
+        headerValues: ["이름", "지역", "날짜", "시간"],
         title: sheetname,
       });
     }
 
-    const formatDateTime = (date: Date) => {
+    const formatDate = (date: Date) => {
       const year = date.getFullYear().toString();
       const month = (date.getMonth() + 1).toString().padStart(2, "0");
       const day = date.getDate().toString().padStart(2, "0");
+
+      return `${year}${month}${day}`;
+    };
+
+    const formatTime = (date: Date) => {
       const hour = date.getHours().toString().padStart(2, "0");
       const minute = date.getMinutes().toString().padStart(2, "0");
       const second = date.getSeconds().toString().padStart(2, "0");
 
-      return `${year}. ${month}. ${day}. ${hour}:${minute}:${second}`;
+      return `${hour}${minute}${second}`;
     };
 
     // 변환한 json형식대로 sheet에 추가
     await sheet.addRow({
       이름: sheetdata.name,
       지역: sheetdata.region,
-      시간: formatDateTime(new Date()),
+      날짜: formatDate(new Date()),
+      시간: formatTime(new Date()),
     });
 
     return NextResponse.json({ success: true }, { status: 200 });
