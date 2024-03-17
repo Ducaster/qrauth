@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
       const minute = date.getMinutes().toString().padStart(2, "0");
       const second = date.getSeconds().toString().padStart(2, "0");
 
-      return `${year}. ${month}. ${day}. ${hour}: ${minute}: ${second}`;
+      return `${year}. ${month}. ${day}. ${hour}:${minute}:${second}`;
     };
 
     // 변환한 json형식대로 sheet에 추가
