@@ -144,17 +144,23 @@ export async function POST(req: NextRequest) {
     }
 
     const formatDate = (date: Date) => {
-      const year = date.getFullYear().toString();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
+      // 한국 시간대로 조정
+      const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+      const year = kstDate.getFullYear().toString();
+      const month = (kstDate.getMonth() + 1).toString().padStart(2, "0");
+      const day = kstDate.getDate().toString().padStart(2, "0");
 
       return `${year}${month}${day}`;
     };
 
     const formatTime = (date: Date) => {
-      const hour = date.getHours().toString().padStart(2, "0");
-      const minute = date.getMinutes().toString().padStart(2, "0");
-      const second = date.getSeconds().toString().padStart(2, "0");
+      // 한국 시간대로 조정
+      const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+      const hour = kstDate.getHours().toString().padStart(2, "0");
+      const minute = kstDate.getMinutes().toString().padStart(2, "0");
+      const second = kstDate.getSeconds().toString().padStart(2, "0");
 
       return `${hour}${minute}${second}`;
     };
