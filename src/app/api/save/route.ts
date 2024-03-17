@@ -57,7 +57,7 @@ export async function PUT(req: NextRequest) {
     try {
       console.log("Create a new sheet");
       sheet = await doc.addSheet({
-        headerValues: ["이름", "지역", "시간"],
+        headerValues: ["이름", "지역", "날짜", "시간"],
         title: newSheet.sheetName,
       });
       return NextResponse.json({ success: true }, { status: 200 });
