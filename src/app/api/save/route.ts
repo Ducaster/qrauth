@@ -143,14 +143,22 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const formatDateTime = (date: Date) => {
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hour = date.getHours().toString().padStart(2, "0");
+      const minute = date.getMinutes().toString().padStart(2, "0");
+      const second = date.getSeconds().toString().padStart(2, "0");
+
+      return `${year}. ${month}. ${day}. ${hour}: ${minute}: ${second}`;
+    };
+
     // 변환한 json형식대로 sheet에 추가
     await sheet.addRow({
       이름: sheetdata.name,
       지역: sheetdata.region,
-      시간: new Date().toLocaleString("ko-KR", {
-        timeZone: "Asia/Seoul",
-        hour12: false,
-      }),
+      시간: formatDateTime(new Date()),
     });
 
     return NextResponse.json({ success: true }, { status: 200 });
