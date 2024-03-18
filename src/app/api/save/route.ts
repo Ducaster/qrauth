@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
       const month = (kstDate.getMonth() + 1).toString().padStart(2, "0");
       const day = kstDate.getDate().toString().padStart(2, "0");
 
-      return `${year}${month}${day}`;
+      return `${year}-${month}-${day}`;
     };
 
     const formatTime = (date: Date) => {
@@ -162,7 +162,7 @@ export async function POST(req: NextRequest) {
       const minute = kstDate.getMinutes().toString().padStart(2, "0");
       const second = kstDate.getSeconds().toString().padStart(2, "0");
 
-      return `'${hour}${minute}${second}`;
+      return `${hour}:${minute}:${second}`;
     };
 
     // 변환한 json형식대로 sheet에 추가
