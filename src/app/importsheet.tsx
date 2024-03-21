@@ -57,10 +57,19 @@ export const QrProvider: React.FC<{ children: React.ReactNode }> = ({
                 showConfirmButton: false,
                 timer: 1500,
               });
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 500) {
+              Swal.fire({
+                icon: "error",
+                title: "데이터 인증 실패.\n시트 헤더 확인 바랍니다.",
+                showConfirmButton: true,
+              });
             } else {
               Swal.fire({
                 icon: "error",
-                title: "인증 실패",
+                title: "오류 발생",
                 showConfirmButton: true,
               });
             }

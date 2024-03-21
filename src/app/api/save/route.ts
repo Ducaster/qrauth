@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest) {
   const body = req.body;
   if (!body) {
     console.log("Body is null");
-    return NextResponse.json({ erorr: "Bad Request" }, { status: 400 });
+    return NextResponse.json({ error: "Bad Request" }, { status: 400 });
   }
 
   const processText = async () => {
