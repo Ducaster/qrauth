@@ -124,16 +124,11 @@ export async function POST(req: NextRequest) {
     };
     // 텍스트를 정리하고 json형식으로 변환
     const result = await processText();
-    console.log(result);
     const jsonData = JSON.parse(result);
     const sheetdata = JSON.parse(jsonData.data);
-    console.log(sheetdata, typeof sheetdata);
-    console.log(sheetdata.name);
-    console.log(sheetdata.region);
     const sheetname = jsonData.selectedValue;
-    console.log(sheetname);
 
-    // sheet1이 있는지 확인하고, 없다면 생성
+    // sheet이 있는지 확인하고, 없다면 생성
     let sheet = doc.sheetsByTitle[sheetname];
     if (!sheet) {
       console.log("Create a new sheet");
@@ -141,6 +136,23 @@ export async function POST(req: NextRequest) {
         headerValues: ["이름", "지역", "날짜", "시간"],
         title: sheetname,
       });
+    }
+
+    const rows = await sheet.getRows();
+    let emptyRow = null;
+    let targetRow = 9999;
+    for (const row of rows) {
+      if (
+        !row.get("이름") &&
+        !row.get("지역") &&
+        !row.get("날짜") &&
+        !row.get("시간")
+      ) {
+        emptyRow = row;
+        targetRow = emptyRow.rowNumber;
+        console.log("emptyRow", emptyRow.rowNumber);
+        break;
+      }
     }
 
     const formatDate = (date: Date) => {
@@ -166,12 +178,23 @@ export async function POST(req: NextRequest) {
     };
 
     // 변환한 json형식대로 sheet에 추가
+    const cellRange = `A${targetRow}:D${targetRow}`;
+    console.log(cellRange);
+    await sheet.loadCells(cellRange); // 해당 범위의 셀 로드
+    sheet.getCell(targetRow - 1, 0).value = sheetdata.name;
+    sheet.getCell(targetRow - 1, 1).value = sheetdata.region;
+    sheet.getCell(targetRow - 1, 2).value = formatDate(new Date());
+    sheet.getCell(targetRow - 1, 3).value = formatTime(new Date());
+    await sheet.saveUpdatedCells(); // 변경된 셀을 저장
+
+    /*
     await sheet.addRow({
       이름: sheetdata.name,
       지역: sheetdata.region,
       날짜: formatDate(new Date()),
       시간: formatTime(new Date()),
     });
+    */
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
