@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
 
     const rows = await sheet.getRows();
     let emptyRow = null;
-    let targetRow = 9999;
+    let targetRow = null;
     for (const row of rows) {
       if (
         !row.get("이름") &&
@@ -178,14 +178,23 @@ export async function POST(req: NextRequest) {
     };
 
     // 변환한 json형식대로 sheet에 추가
-    const cellRange = `A${targetRow}:D${targetRow}`;
-    console.log(cellRange);
-    await sheet.loadCells(cellRange); // 해당 범위의 셀 로드
-    sheet.getCell(targetRow - 1, 0).value = sheetdata.name;
-    sheet.getCell(targetRow - 1, 1).value = sheetdata.region;
-    sheet.getCell(targetRow - 1, 2).value = formatDate(new Date());
-    sheet.getCell(targetRow - 1, 3).value = formatTime(new Date());
-    await sheet.saveUpdatedCells(); // 변경된 셀을 저장
+    if (!targetRow) {
+      await sheet.addRow({
+        이름: sheetdata.name,
+        지역: sheetdata.region,
+        날짜: formatDate(new Date()),
+        시간: formatTime(new Date()),
+      });
+    } else if (targetRow) {
+      const cellRange = `A${targetRow}:D${targetRow}`;
+      console.log(cellRange);
+      await sheet.loadCells(cellRange); // 해당 범위의 셀 로드
+      sheet.getCell(targetRow - 1, 0).value = sheetdata.name;
+      sheet.getCell(targetRow - 1, 1).value = sheetdata.region;
+      sheet.getCell(targetRow - 1, 2).value = formatDate(new Date());
+      sheet.getCell(targetRow - 1, 3).value = formatTime(new Date());
+      await sheet.saveUpdatedCells(); // 변경된 셀을 저장
+    }
 
     /*
     await sheet.addRow({
