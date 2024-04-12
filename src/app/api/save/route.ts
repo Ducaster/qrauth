@@ -78,7 +78,6 @@ export async function GET() {
     }
 
     const sheetTitles = doc.sheetsByIndex.map((sheet) => sheet.title);
-    console.log(sheetTitles);
 
     return NextResponse.json(
       { success: true, data: sheetTitles },
@@ -109,7 +108,6 @@ export async function POST(req: NextRequest) {
       console.log("Body is null");
       return NextResponse.json({ erorr: "Bad Request" }, { status: 400 });
     }
-    console.log(body);
     // 데이터를 텍스트로 변환
     const processText = async () => {
       const reader = body.getReader();
@@ -150,11 +148,21 @@ export async function POST(req: NextRequest) {
       ) {
         emptyRow = row;
         targetRow = emptyRow.rowNumber;
-        console.log("emptyRow", emptyRow.rowNumber);
         break;
       }
     }
 
+    const formatDate = (date: Date) => {
+      const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+      return kstDate.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+    };
+
+    const formatTime = (date: Date) => {
+      const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+      return kstDate.toISOString().split("T")[1].split(".")[0]; // HH:MM:SS 형식
+    };
+
+    /*
     const formatDate = (date: Date) => {
       // 한국 시간대로 조정
       const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
@@ -176,6 +184,7 @@ export async function POST(req: NextRequest) {
 
       return `${hour}:${minute}:${second}`;
     };
+    */
 
     // 변환한 json형식대로 sheet에 추가
     if (!targetRow) {
@@ -191,8 +200,8 @@ export async function POST(req: NextRequest) {
       await sheet.loadCells(cellRange); // 해당 범위의 셀 로드
       sheet.getCell(targetRow - 1, 0).value = sheetdata.name;
       sheet.getCell(targetRow - 1, 1).value = sheetdata.region;
-      sheet.getCell(targetRow - 1, 2).value = formatDate(new Date());
-      sheet.getCell(targetRow - 1, 3).value = formatTime(new Date());
+      sheet.getCell(targetRow - 1, 2).value = formatDate(new Date()).toString();
+      sheet.getCell(targetRow - 1, 3).value = formatTime(new Date()).toString();
       await sheet.saveUpdatedCells(); // 변경된 셀을 저장
     }
 
